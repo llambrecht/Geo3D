@@ -46,6 +46,23 @@ void Viewer::init()
 	m_angle1 = 0.0;
 	m_angle2 = 0.0;
 
+    Mat4 m1 = translate(1,2,0);
+    std::cout << m1 << std::endl;
+    std::cout << "================" << std::endl;
+    Mat4 m2 = rotateZ(45);
+    std::cout << m2 << std::endl;
+    std::cout << "================" << std::endl;
+    std::cout << translate(1,2,0)*rotateZ(45) << std::endl;
+    std::cout << "================" << std::endl;
+    std::cout << rotateZ(45)*translate(1,2,0) << std::endl;
+
+    Mat4 m3 = rotateZ(45);
+    Vec3 u(2,2,2);
+    Vec3 v = Vec3(m3*Vec4(u,1));
+    std::cout << v << std::endl;
+
+
+
 
 }
 
@@ -62,6 +79,34 @@ void Viewer::draw_repere(const Mat4& global)
 
 	//	//appel
 	//	fonction_locale(1.1f);
+
+    //AXE Z
+    //m_prim.draw_cylinder(translate(0,0,1.5)*scale(0.5,0.5,2), BLEU);
+    //m_prim.draw_cone(translate(0,0,3), BLEU);
+
+    //AXE Y
+    //m_prim.draw_cylinder(translate(0,1.5,0)*rotateX(90)*scale(0.5,0.5,2), VERT);
+   // m_prim.draw_cone(translate(0,3,0),ROUGE);
+
+    auto fleche = [&](Mat4 tr, Vec3 coul) -> void
+    {
+        m_prim.draw_cylinder(tr*translate(0,0,1.5)*scale(0.5,0.5,1.95), coul);
+        m_prim.draw_cone(tr*translate(0,0,3),coul);
+    };
+
+
+    m_prim.draw_sphere(global, BLANC);
+
+    //AXE X
+    fleche(global,BLEU);
+    //AXE Y
+    fleche(global*rotateX(-90),VERT);
+    //AXE Z
+    fleche(global*rotateY(90),ROUGE);
+
+    //X+Y+Z / 3 (au milieu quoi)
+    fleche(global*rotateX(-45)*rotateY(45),MAGENTA);
+
 }
 
 
@@ -75,8 +120,8 @@ void Viewer::draw_basic()
 {
 	m_prim.draw_sphere(Mat4(), BLANC);
 	m_prim.draw_cube(translate(3,0,0), ROUGE);
-	m_prim.draw_cone(translate(0,3,0), VERT);
-	m_prim.draw_cylinder(translate(0,0,3), BLEU);
+    m_prim.draw_cone(translate(0,3,0)*rotateX(90), VERT);
+    m_prim.draw_cylinder(translate(0,0,3), BLEU);
 }
 
 void Viewer::draw()
